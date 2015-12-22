@@ -35,31 +35,17 @@ namespace caffe{
 				const int count = bottom[0]->count();
 				int st_point = bottom[0]->count();
 				st_point *= threshold_;
-				//st_count = this->layer_param_.pushin_param().st_count();
+				
+				for (int i = 0; i < st_count; ++i) {
+						mask[i] = 1;
+				}
+				for (int i = st_count; i < count; ++i) {
+						mask[i] = 0;
+				}
+				for (int i = 0; i < count; ++i) {
+						top_data[i] = bottom_data[i] * mask[i] * scale_;
+				}
 
-				//if (this->phase_ == TRAIN) {
-						// Create random numbers
-						/*
-						caffe_rng_bernoulli(count, 1. - threshold_, mask);
-						for (int i = 0; i < count; ++i) {
-								top_data[i] = bottom_data[i] * mask[i] * scale_;
-						}
-						*/
-						for (int i = 0; i < st_count; ++i) {
-								mask[i] = 1;
-						}
-						for (int i = st_count; i < count; ++i) {
-								mask[i] = 0;
-						}
-						for (int i = 0; i < count; ++i) {
-								top_data[i] = bottom_data[i] * mask[i] * scale_;
-						}
-				//} else {
-						//caffe_copy(bottom[0]->count(), bottom_data, top_data);
-				//		for (int i = 0; i < count; ++i) {
-				//				top_data[i] = bottom_data[i] * mask[i] * scale_;
-				//		}
-				//}
 				st_count++;
 				if (st_count > count)
 						st_count -= 1;
@@ -68,28 +54,21 @@ namespace caffe{
 
 		template <typename Dtype>
 		void PushinLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
-																					const vector<bool>& propagate_down,
+													 								const vector<bool>& propagate_down,
 																					const vector<Blob<Dtype>*>& bottom){
-				//if (propagate_down[0]) {
-						const Dtype* top_diff = top[0]->cpu_diff();
-						Dtype* bottom_diff = bottom[0]->mutable_cpu_diff();
+				const Dtype* top_diff = top[0]->cpu_diff();
+				Dtype* bottom_diff = bottom[0]->mutable_cpu_diff();
 				unsigned int* mask = rand_vec_.mutable_cpu_data();
 				const int count = bottom[0]->count();
-						//if (this->phase_ == TRAIN) {
-						//		const unsigned int* mask = rand_vec_.cpu_data();
-						for (int i = 0; i < st_count; ++i) {
-								mask[i] = 1;
-						}
-						for (int i = st_count; i < count; ++i) {
-								mask[i] = 0;
-						}
-								for (int i = 0; i < count; ++i) {
-										bottom_diff[i] = top_diff[i] * mask[i] * scale_;
-								}
-						//} else {
-						//		caffe_copy(top[0]->count(), top_diff, bottom_diff);
-						//}
-				//}
+				for (int i = 0; i < st_count; ++i) {
+						mask[i] = 1;
+				}
+				for (int i = st_count; i < count; ++i) {
+						mask[i] = 0;
+				}
+				for (int i = 0; i < count; ++i) {
+						bottom_diff[i] = top_diff[i] * mask[i] * scale_;
+				}
 		}
 
 
@@ -99,7 +78,5 @@ namespace caffe{
 
 		INSTANTIATE_CLASS(PushinLayer);
 		REGISTER_LAYER_CLASS(Pushin);
-
 		// namespace caffe
-
 }
