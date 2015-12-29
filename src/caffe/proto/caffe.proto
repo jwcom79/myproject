@@ -391,7 +391,7 @@ message LayerParameter {
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
   optional WindowDataParameter window_data_param = 129;
-	optional DropinParameter dropin_param = 140;
+	optional PushinParameter pushin_param = 140;
 }
 
 // Message that stores parameters used to apply transformation
@@ -1253,6 +1253,6 @@ message PReLUParameter {
   optional bool channel_shared = 2 [default = false];
 }
 
-message DropinParameter {
-  optional float dropin_ratio = 1 [default = 0.01]; // dropin ratio
+message PushinParameter {
+  optional float pushin_ratio = 1 [default = 0.01]; // pushin ratio
 }
