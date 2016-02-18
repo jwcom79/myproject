@@ -60,10 +60,10 @@ namespace caffe{
 						
 						st_count += 8;
 
-						if (st_count > count)
+						if (st_count >= count)
 								st_count = count;
-						
-						cout << "on train process :" << st_count << endl;
+						else
+								cout << "on train process :" << st_count << endl;
 				}
 
 				else {
@@ -83,8 +83,10 @@ namespace caffe{
 
 								st_count += 40;
 
-								if (st_count > count)
+								if (st_count >= count)
 										st_count = count;
+								else
+										cout << "on test process :" << st_count << endl;
 
 								int num = 0;
 
@@ -94,7 +96,6 @@ namespace caffe{
 								}
 
 								cout << "1 in mask set : " << num << endl;
-								cout << "on test process :" << st_count << endl;
 
 								//caffe_copy(bottom[0]->count(), bottom_data, top_data);
 								//for (int i = 0; i < count; ++i) 
