@@ -184,7 +184,6 @@ layer {
   top: "ip1"
   param {
     lr_mult: 1
-    decay_mult: 250
   }
   param {
     lr_mult: 2
@@ -253,7 +252,7 @@ layer {
 layer {
   name: "loss"
   type: "SoftmaxWithLoss"
-  bottom: "ip1"
+  bottom: "ip2"
   bottom: "label"
   top: "loss"
 }

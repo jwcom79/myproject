@@ -74,6 +74,7 @@ class PushinLayer : public NeuronLayer<Dtype> {
   Dtype scale_;
   unsigned int uint_thres_;
 	unsigned int st_count;
+	int first_test;
 };
 
 }  // namespace caffe
