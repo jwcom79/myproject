@@ -81,7 +81,7 @@ namespace caffe{
 										top_data[i] = bottom_data[i] * mask[i] * scale_;
 								}
 
-								st_count += 40;
+								st_count += 80;
 
 								if (st_count >= count)
 										st_count = count;
