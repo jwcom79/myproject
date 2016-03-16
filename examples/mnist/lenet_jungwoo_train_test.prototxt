@@ -123,26 +123,22 @@ layer {
   }
 }
 layer {
+	name: "absVal1"
+	type: "AbsVal"
+	top: "absVal1"
+	bottom: "ip1"
+}
+layer {
   name: "relu1"
   type: "ReLU"
-  bottom: "ip1"
-  top: "ip1"
-}
-
-layer {
-  name: "push1"
-  type: "Pushin"
-  bottom: "ip1"
-  top: "ip1"
-	pushin_param {
-		pushin_ratio: 0.2
-	}
+  bottom: "absVal1"
+  top: "relu1"
 }
 
 layer {
   name: "ip2"
   type: "InnerProduct"
-  bottom: "ip1"
+  bottom: "relu1"
   top: "ip2"
   param {
     lr_mult: 1

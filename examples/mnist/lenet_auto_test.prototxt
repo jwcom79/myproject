@@ -1,34 +1,13 @@
-name: "LeNet"
 layer {
-  name: "mnist"
+  name: "data"
   type: "Data"
   top: "data"
   top: "label"
-  include {
-    phase: TRAIN
-  }
   transform_param {
-    scale: 0.00390625
+    scale: 0.00392156862745
   }
   data_param {
-    source: "examples/mnist/mnist_train_lmdb"
-    batch_size: 64
-    backend: LMDB
-  }
-}
-layer {
-  name: "mnist"
-  type: "Data"
-  top: "data"
-  top: "label"
-  include {
-    phase: TEST
-  }
-  transform_param {
-    scale: 0.00390625
-  }
-  data_param {
-    source: "examples/mnist/mnist_test_lmdb"
+    source: "exmaples/mnist/mnist_test_lmdb"
     batch_size: 100
     backend: LMDB
   }
@@ -38,21 +17,11 @@ layer {
   type: "Convolution"
   bottom: "data"
   top: "conv1"
-  param {
-    lr_mult: 1
-  }
-  param {
-    lr_mult: 2
-  }
   convolution_param {
     num_output: 20
     kernel_size: 5
-    stride: 1
     weight_filler {
       type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
     }
   }
 }
@@ -72,21 +41,11 @@ layer {
   type: "Convolution"
   bottom: "pool1"
   top: "conv2"
-  param {
-    lr_mult: 1
-  }
-  param {
-    lr_mult: 2
-  }
   convolution_param {
     num_output: 50
     kernel_size: 5
-    stride: 1
     weight_filler {
       type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
     }
   }
 }
@@ -102,67 +61,39 @@ layer {
   }
 }
 layer {
-  name: "ip1"
+  name: "fc1"
   type: "InnerProduct"
   bottom: "pool2"
-  top: "ip1"
-  param {
-    lr_mult: 1
-  }
-  param {
-    lr_mult: 2
-  }
+  top: "fc1"
   inner_product_param {
     num_output: 500
     weight_filler {
       type: "xavier"
-    }
-    bias_filler {
-      type: "constant"
     }
   }
 }
 layer {
   name: "relu1"
   type: "ReLU"
-  bottom: "ip1"
-  top: "relu1"
+  bottom: "fc1"
+  top: "fc1"
 }
 layer {
-  name: "ip2"
+  name: "score"
   type: "InnerProduct"
-  bottom: "relu1"
-  top: "ip2"
-  param {
-    lr_mult: 1
-  }
-  param {
-    lr_mult: 2
-  }
+  bottom: "fc1"
+  top: "score"
   inner_product_param {
     num_output: 10
     weight_filler {
       type: "xavier"
     }
-    bias_filler {
-      type: "constant"
-    }
-  }
-}
-layer {
-  name: "accuracy"
-  type: "Accuracy"
-  bottom: "ip2"
-  bottom: "label"
-  top: "accuracy"
-  include {
-    phase: TEST
   }
 }
 layer {
   name: "loss"
   type: "SoftmaxWithLoss"
-  bottom: "ip2"
+  bottom: "score"
   bottom: "label"
   top: "loss"
 }
