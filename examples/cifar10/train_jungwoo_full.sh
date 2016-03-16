@@ -4,6 +4,7 @@ TOOLS=./build/tools
 
 $TOOLS/caffe train \
     --solver=examples/cifar10/jungwoo_full_solver.prototxt
+#    --snapshot=examples/cifar10/jungwoo_full_iter_20000.solverstate.h5
 
 # reduce learning rate by factor of 10
 $TOOLS/caffe train \

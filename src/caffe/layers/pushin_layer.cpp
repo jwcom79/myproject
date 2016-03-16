@@ -20,6 +20,7 @@ namespace caffe{
 				//check INITIAL st_count
 				cout << "INITIAL threshold_ : " << threshold_ << endl;
 				cout << "INITIAL st_count: " << st_count << endl;
+				cout << "INITIAL first_test: " << first_test << endl;
 		}
 
 		template <typename Dtype>
@@ -39,15 +40,7 @@ namespace caffe{
 				unsigned int* mask = rand_vec_.mutable_cpu_data();
 				const int count = bottom[0]->count();
 
-				/*
-				caffe_rng_bernoulli(count, 1. - threshold_, mask);
-				for (int i = 0; i < count; ++i) {
-						top_data[i] = bottom_data[i] * mask[i] * scale_;
-				}
-				*/
-
 				if (this->phase_ == TRAIN) {
-						// Create random numbers
 						for (int i = 0; i < st_count; ++i) {
 								mask[i] = 1;
 						}
@@ -57,15 +50,15 @@ namespace caffe{
 						for (int i = 0; i < count; ++i) {
 								top_data[i] = bottom_data[i] * mask[i] * scale_;
 						}
-						
-						st_count += 8;
 
-						if (st_count >= count)
+						st_count += 4;
+
+						if (st_count > count)
 								st_count = count;
-						else
-								cout << "on train process :" << st_count << endl;
-				}
 
+						cout << "on train st_count : " << st_count << endl;
+
+				}
 				else {
 						if(first_test < 100)
 								first_test += 1;
@@ -81,12 +74,10 @@ namespace caffe{
 										top_data[i] = bottom_data[i] * mask[i] * scale_;
 								}
 
-								st_count += 80;
+								st_count += 20;
 
-								if (st_count >= count)
+								if (st_count > count)
 										st_count = count;
-								else
-										cout << "on test process :" << st_count << endl;
 
 								int num = 0;
 
@@ -95,18 +86,12 @@ namespace caffe{
 												num += 1;
 								}
 
-								cout << "1 in mask set : " << num << endl;
-
-								//caffe_copy(bottom[0]->count(), bottom_data, top_data);
-								//for (int i = 0; i < count; ++i) 
-								//		top_data[i] = bottom_data[i] * mask[i] * scale_;
+								cout << "1 in mask array : " << num << endl;
+								cout << "on test st_count :" << st_count << endl;
 						}
 				}
-		
-						
 		}
-
-
+				
 		template <typename Dtype>
 		void PushinLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
 																					const vector<bool>& propagate_down,
